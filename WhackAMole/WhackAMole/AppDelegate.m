@@ -2,8 +2,8 @@
 //  AppDelegate.m
 //  WhackAMole
 //
-//  Created by Takeshi Ugajin on 17/09/2013.
-//  Copyright Takatoshi Ono 2013. All rights reserved.
+//  Created by T.ONO.
+//  Copyright T.ONO 2013. All rights reserved.
 //
 
 #import "cocos2d.h"
@@ -20,10 +20,12 @@
 	
 	// iPhone only
 	if( [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone )
-		return UIInterfaceOrientationMaskLandscape;
+        return UIInterfaceOrientationMaskPortrait;
+		//return UIInterfaceOrientationMaskLandscape;
 	
 	// iPad only
-	return UIInterfaceOrientationMaskLandscape;
+	//return UIInterfaceOrientationMaskLandscape;
+    return UIInterfaceOrientationMaskPortrait;
 }
 
 // Supported orientations. Customize it for your own needs

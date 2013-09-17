@@ -2,8 +2,8 @@
 //  AppDelegate.h
 //  WhackAMole
 //
-//  Created by Takeshi Ugajin on 17/09/2013.
-//  Copyright Takatoshi Ono 2013. All rights reserved.
+//  Created by T.ONO.
+//  Copyright T.ONO 2013. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

@@ -2,14 +2,14 @@
 //  IntroLayer.m
 //  WhackAMole
 //
-//  Created by Takeshi Ugajin on 17/09/2013.
-//  Copyright Takatoshi Ono 2013. All rights reserved.
+//  Created by T.ONO.
+//  Copyright T.ONO 2013. All rights reserved.
 //
 
 
 // Import the interfaces
 #import "IntroLayer.h"
-#import "HelloWorldLayer.h"
+#import "StartScreenLayer.h"
 
 
 #pragma mark - IntroLayer
@@ -61,6 +61,6 @@
 -(void) onEnter
 {
 	[super onEnter];
-	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:[HelloWorldLayer scene] ]];
+	[[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:1.0 scene:[StartScreenLayer scene] ]];
 }
 @end
