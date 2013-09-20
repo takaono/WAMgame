@@ -16,7 +16,7 @@ typedef enum
     level1,
     level2,
     level3
-} MenuTags;
+} LevelMenuTags;
 
 @interface StartScreenLayer : CCLayer <GKAchievementViewControllerDelegate, GKLeaderboardViewControllerDelegate>
 {

@@ -10,11 +10,23 @@
 #import "cocos2d.h"
 #import "ScoreScreenLayer.h"
 
+#define TIME_LIMIT 10.0f
+
+typedef enum
+{
+    tStartMenu,
+    tEndMenu,
+    tCountDown,
+    tMainTimer,
+} GamePlayTags;
+
 @interface GamePlayLayer : CCLayer
 {
     int gameLevel_;
-    CCLabelTTF *countDownLabel_;
-    CCMenu *startMenu_;
+    ccTime startTimer_;
+    ccTime gameMainTimer_;
+    //CCLabelTTF *countDownLabel_;
+//    CCMenu *startMenu_;
 }
 
 @property (nonatomic, readonly) int GameLevel;
