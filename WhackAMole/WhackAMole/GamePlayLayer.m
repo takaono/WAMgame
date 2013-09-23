@@ -42,13 +42,26 @@
 {
     if((self=[super init]))
     {
-        CCLabelTTF *label = [CCLabelTTF labelWithString:@"Game Play Layer" fontName:@"Marker Felt" fontSize:20];
+        score_ = 0;
         
 		CGSize size = [[CCDirector sharedDirector] winSize];
         
-		label.position =  ccp( size.width / 2, size.height - 100 );
+        /*背景画像の設置*/
+        CCSprite *bg0 = [CCSprite spriteWithFile:@"bg_sample01.png"];
+        bg0.position = ccp(size.width / 2, size.height / 2 + 170);
+        [self addChild:bg0];
         
-		[self addChild: label];
+        CCSprite *bg1 = [CCSprite spriteWithFile:@"bg_sample02.png"];
+        bg1.position = ccp(size.width / 2, size.height / 2 + 50);
+        [self addChild:bg1];
+        
+        CCSprite *bg2 = [CCSprite spriteWithFile:@"bg_sample03.png"];
+        bg2.position = ccp(size.width / 2, size.height / 2 - 50);
+        [self addChild:bg2];
+        
+        CCSprite *bg3 = [CCSprite spriteWithFile:@"bg_sample04.png"];
+        bg3.position = ccp(size.width / 2, size.height / 2 - 170);
+        [self addChild:bg3];
         
         __block id copy_self = self;
         
@@ -74,7 +87,7 @@
         /*スタートカウントダウン用ラベルの生成と設置*/
         CCLabelTTF *countDownLabel = [CCLabelTTF labelWithString:@"3" fontName:@"Marker Felt" fontSize:24];
         
-        countDownLabel.position = ccp( size.width / 2, size.height / 2 - 50);
+        countDownLabel.position = ccp( size.width / 2, size.height / 2);
         countDownLabel.tag = tCountDown;
         countDownLabel.opacity = 0;
         countDownLabel.scale = 0;
@@ -91,6 +104,16 @@
         
         [self addChild: mainTimerLabel];
         
+        /*得点カウント用ラベルの生成と設置*/
+        CCLabelTTF *scoreLabel = [CCLabelTTF labelWithString:@"Score: 0" fontName:@"Marker Felt" fontSize:20];
+        
+        scoreLabel.position = ccp(size.width - 10, size.height - 10);
+        scoreLabel.tag = tScoreLabel;
+        scoreLabel.anchorPoint = ccp(1.0f, 1.0f);
+        scoreLabel.visible = YES;
+        
+        [self addChild: scoreLabel];
+        
         
         /*スタートボタン用ラベルの生成と設置*/
         CCMenuItem *startButton = [CCMenuItemFont itemWithString:@"Tap to start" block:^(id sender){
@@ -103,6 +126,10 @@
         [startMenu setPosition:ccp( size.width / 2, size.height / 2)];
 		
 		[self addChild:startMenu];
+        
+        /*モグラオブジェクトの生成と設置*/
+        MoleObject *mole = [[[MoleObject alloc] initWithPosition:ccp(60, 140)] autorelease];
+        [self addChild:mole];
         
     }
     
@@ -123,7 +150,8 @@
         NSString *slevel = [NSString stringWithFormat:@"Current Level: %d", gameLevel_];
         CCLabelTTF *levelLabel = [CCLabelTTF labelWithString:slevel fontName:@"Marker Felt" fontSize:20];
         
-        levelLabel.position =  ccp( size.width /2 , size.height/2 + 50 );
+        levelLabel.position =  ccp( size.width - 10, 10 );
+        levelLabel.anchorPoint = ccp(1.0, 0.0);
         
 		[self addChild: levelLabel];
         
@@ -231,5 +259,15 @@
         [mainTimer setString:[NSString stringWithFormat:@"%.02fs", gameMainTimer_]];
     }
 }
+
+
+-(void)incrementScore
+{
+	score_ += 1;
+	NSString *sScore = [NSString stringWithFormat:@"Score: %d", score_];
+	CCLabelTTF *scoreLabel = (CCLabelTTF*)[self getChildByTag:tScoreLabel];
+    [scoreLabel setString:sScore];
+}
+
 
 @end
