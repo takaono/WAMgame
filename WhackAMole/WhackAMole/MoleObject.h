@@ -29,5 +29,6 @@ typedef enum
 @property (nonatomic, readonly) BOOL OnAppear;
 
 -(id)initWithPosition:(CGPoint)pos;
+-(void)runPeepAction;
 
 @end

@@ -48,20 +48,24 @@
         
         /*背景画像の設置*/
         CCSprite *bg0 = [CCSprite spriteWithFile:@"bg_sample01.png"];
-        bg0.position = ccp(size.width / 2, size.height / 2 + 170);
-        [self addChild:bg0];
+		bg0.anchorPoint = ccp(0.5, 1.0);
+        bg0.position = ccp(size.width / 2, size.height);
+        [self addChild:bg0 z:tBg0];
         
         CCSprite *bg1 = [CCSprite spriteWithFile:@"bg_sample02.png"];
-        bg1.position = ccp(size.width / 2, size.height / 2 + 50);
-        [self addChild:bg1];
+		bg1.anchorPoint = ccp(0.5, 0.0);
+        bg1.position = ccp(size.width / 2, size.height / 2);
+        [self addChild:bg1 z:tBg1];
         
         CCSprite *bg2 = [CCSprite spriteWithFile:@"bg_sample03.png"];
-        bg2.position = ccp(size.width / 2, size.height / 2 - 50);
-        [self addChild:bg2];
+		bg2.anchorPoint = ccp(0.5, 1.0);
+        bg2.position = ccp(size.width / 2, size.height / 2);
+        [self addChild:bg2 z:tBg2];
         
         CCSprite *bg3 = [CCSprite spriteWithFile:@"bg_sample04.png"];
-        bg3.position = ccp(size.width / 2, size.height / 2 - 170);
-        [self addChild:bg3];
+		bg3.anchorPoint = ccp(0.5, 0.0);
+        bg3.position = ccp(size.width / 2, 0.0);
+        [self addChild:bg3 z:tBg3];
         
         __block id copy_self = self;
         
@@ -81,7 +85,7 @@
         menu.opacity = 0;
         menu.visible = NO; /*visibleをNOにしないとタップできてしまう*/
 		
-		[self addChild:menu];
+		[self addChild:menu z:tOrderGameEnd];
         
         
         /*スタートカウントダウン用ラベルの生成と設置*/
@@ -92,7 +96,7 @@
         countDownLabel.opacity = 0;
         countDownLabel.scale = 0;
         
-        [self addChild: countDownLabel];
+        [self addChild: countDownLabel z:tOrderStartCount];
         
         /*制限時間用ラベルの生成と設置*/
         CCLabelTTF *mainTimerLabel = [CCLabelTTF labelWithString:@"60.0s" fontName:@"Marker Felt" fontSize:20];
@@ -102,7 +106,7 @@
         mainTimerLabel.anchorPoint = ccp(0.0f, 1.0f);
         mainTimerLabel.visible = NO;
         
-        [self addChild: mainTimerLabel];
+        [self addChild: mainTimerLabel z:tOrderTime];
         
         /*得点カウント用ラベルの生成と設置*/
         CCLabelTTF *scoreLabel = [CCLabelTTF labelWithString:@"Score: 0" fontName:@"Marker Felt" fontSize:20];
@@ -112,7 +116,7 @@
         scoreLabel.anchorPoint = ccp(1.0f, 1.0f);
         scoreLabel.visible = YES;
         
-        [self addChild: scoreLabel];
+        [self addChild: scoreLabel z:tOrderScore];
         
         
         /*スタートボタン用ラベルの生成と設置*/
@@ -125,12 +129,29 @@
         
         [startMenu setPosition:ccp( size.width / 2, size.height / 2)];
 		
-		[self addChild:startMenu];
+		[self addChild:startMenu z:tOrderTap];
         
         /*モグラオブジェクトの生成と設置*/
-        MoleObject *mole = [[[MoleObject alloc] initWithPosition:ccp(60, 140)] autorelease];
-        [self addChild:mole];
-        
+        moleSet_ = [[CCArray alloc] initWithCapacity:5];
+        MoleObject *mole0 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 4, size.height / 2 + 120)] autorelease];
+        [self addChild:mole0 z:tMole0];
+        [moleSet_ addObject:mole0];
+		
+		MoleObject *mole1 = [[[MoleObject alloc] initWithPosition:ccp(size.width * 3 / 4, size.height / 2 + 120)] autorelease];
+        [self addChild:mole1 z:tMole1];
+        [moleSet_ addObject:mole1];
+		
+		MoleObject *mole2 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 2, size.height / 2 + 20)] autorelease];
+        [self addChild:mole2 z:tMole2];
+        [moleSet_ addObject:mole2];
+		
+		MoleObject *mole3 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 4, size.height / 2 - 80)] autorelease];
+        [self addChild:mole3 z:tMole3];
+        [moleSet_ addObject:mole3];
+		
+		MoleObject *mole4 = [[[MoleObject alloc] initWithPosition:ccp(size.width * 3 / 4, size.height / 2 - 80)] autorelease];
+        [self addChild:mole4 z:tMole4];
+        [moleSet_ addObject:mole4];
     }
     
     return self;
@@ -155,6 +176,24 @@
         
 		[self addChild: levelLabel];
         
+        switch(level)
+		{
+			case 1:
+				maxActiveNum_ = 2;
+				break;
+				
+			case 2:
+				maxActiveNum_ = 4;
+				break;
+				
+			case 3:
+				maxActiveNum_ = 5;
+				break;
+				
+			default:
+				maxActiveNum_ = 2;
+				break;
+		}
     }
     return self;
 }
@@ -162,6 +201,7 @@
 
 -(void) dealloc
 {
+    [moleSet_ release];
     [super dealloc];
 }
 
@@ -257,6 +297,23 @@
     else
     {
         [mainTimer setString:[NSString stringWithFormat:@"%.02fs", gameMainTimer_]];
+        
+        for(MoleObject* mole in moleSet_)
+		{
+			//何匹出現中か取得
+//			int numAppear = [self countActiveMoles];
+//			
+//			if(!mole.OnAppear && numAppear < maxActiveNum_)
+//			{
+//				[mole runPeepAction];
+//			}
+			
+			if(!mole.OnAppear)
+			{
+				[mole runPeepAction];
+			}
+
+		}
     }
 }
 
@@ -264,9 +321,28 @@
 -(void)incrementScore
 {
 	score_ += 1;
+    
 	NSString *sScore = [NSString stringWithFormat:@"Score: %d", score_];
+    
 	CCLabelTTF *scoreLabel = (CCLabelTTF*)[self getChildByTag:tScoreLabel];
+    
     [scoreLabel setString:sScore];
+}
+
+
+-(int)countActiveMoles
+{
+	int count = 0;
+	
+	for(MoleObject* mole in moleSet_)
+	{
+		if(mole.OnAppear)
+		{
+			count++;
+		}
+	}
+	
+	return count;
 }
 
 

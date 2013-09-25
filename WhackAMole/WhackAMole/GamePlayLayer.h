@@ -22,10 +22,30 @@ typedef enum
     tScoreLabel,
 } GamePlayTags;
 
+typedef enum
+{
+    tBg0 = 0,
+	tMole0,
+	tMole1,
+    tBg1,
+	tMole2,
+	tBg2,
+	tMole3,
+	tMole4,
+	tBg3,
+    tOrderGameEnd,
+    tOrderStartCount,
+    tOrderTime,
+    tOrderScore,
+    tOrderTap,
+} SpriteOrderTags;
+
+
 @interface GamePlayLayer : CCLayer
 {
     int gameLevel_;
     int score_;
+    int maxActiveNum_;
     ccTime startTimer_;
     ccTime gameMainTimer_;
     

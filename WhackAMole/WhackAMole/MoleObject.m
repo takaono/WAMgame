@@ -40,6 +40,7 @@
 {
     if((self = [self init]))
     {
+        self.anchorPoint = ccp(0.5, 1.0);
         self.position = pos;
 		originalPos_ = pos;
     }
@@ -81,17 +82,31 @@
 	if(touch.tapCount > 0)
 	{
         NSLog(@"Tap");
-        GamePlayLayer *game = (GamePlayLayer*)[self parent];
-        [game incrementScore];
-//		if(onAppear_ && !onHit_)
-//		{
-//			onHit_ = YES;
-//			GamePlayLayer *game = (GamePlayLayer*)[self parent];
-//			[game incrementScore];
-//			//成功アクションの実行
-//			[self successAction];
-//		}
+        //GamePlayLayer *game = (GamePlayLayer*)[self parent];
+        //[game incrementScore];
+		if(onAppear_ && !onHit_)
+		{
+			onHit_ = YES;
+			GamePlayLayer *game = (GamePlayLayer*)[self parent];
+			[game incrementScore];
+			//成功アクションの実行
+			[self successAction];
+		}
 	}
+}
+
+
+-(void)runPeepAction
+{
+	//レベルによってこの時間を調整すれば、出現頻度、出現時間が変わる
+	//waitingTime_ = CCRANDOM_0_1() + 1; //1～2秒間の待機時間を生成
+	//actionTime_ = CCRANDOM_0_1() + 1; //1～2秒間のアクションタイムを生成
+	waitingTime_ = 1;
+	actionTime_ = 1;
+	
+	currentWait_ = 0;
+    NSLog(@"debug");
+	[self schedule:@selector(scheduleActionBegin:)];
 }
 
 
@@ -111,13 +126,17 @@
 -(void)startAction
 {
 	//ランダムで出現エフェクトを決定　int 0-3
-	int effectType = (int)CCRANDOM_0_1() * 4 % 4;
-    NSLog(@"type: %d", effectType);
+	//int effectType = (int)CCRANDOM_0_1() * 4 % 4;
+    //NSLog(@"type: %d", effectType);
+	int effectType = 0;
 	onAppear_ = YES;
     
-    float randY = CCRANDOM_0_1() * 20;
-    float randUp = CCRANDOM_0_1() * 0.2 + 0.3;
-    float randDown = CCRANDOM_0_1() * 0.2 + 0.3;
+    // float randY = CCRANDOM_0_1() * 20;
+    // float randUp = CCRANDOM_0_1() * 0.2 + 0.3;
+    // float randDown = CCRANDOM_0_1() * 0.2 + 0.3;
+	float randY = 10;
+    float randUp = 0.4;
+    float randDown = 0.3;
 	
 	float moveY = 40 + randY;
 	float upTime = actionTime_ * randUp;
