@@ -15,10 +15,17 @@ typedef enum
     tPeepAct,
 } MoleObjTags;
 
+typedef enum
+{
+    sHidden,
+	sStandBy,
+	sAppear,
+} AppearState;
+
 
 @interface MoleObject : CCLayer
 {
-    BOOL onAppear_;
+    unsigned appearState_;
 	BOOL onHit_;
 	CGPoint originalPos_;
 	ccTime waitingTime_;
@@ -26,9 +33,10 @@ typedef enum
 	ccTime actionTime_;
 }
 
-@property (nonatomic, readonly) BOOL OnAppear;
+@property (nonatomic, readonly) unsigned AppearState;
 
 -(id)initWithPosition:(CGPoint)pos;
 -(void)runPeepAction;
+-(void)backToOriginAction;
 
 @end

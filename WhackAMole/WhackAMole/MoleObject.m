@@ -12,7 +12,7 @@
 
 @implementation MoleObject
 
-@synthesize OnAppear = onAppear_;
+@synthesize AppearState = appearState_;
 
 -(id)init
 {
@@ -20,7 +20,7 @@
     {
         self.touchEnabled=YES;
         self.contentSize = CGSizeMake(50, 60);
-        onAppear_ = NO;
+        appearState_ = sHidden;
 		onHit_ = NO;
         
         self.ignoreAnchorPointForPosition = NO;
@@ -84,7 +84,7 @@
         NSLog(@"Tap");
         //GamePlayLayer *game = (GamePlayLayer*)[self parent];
         //[game incrementScore];
-		if(onAppear_ && !onHit_)
+		if(appearState_ == sAppear && !onHit_)
 		{
 			onHit_ = YES;
 			GamePlayLayer *game = (GamePlayLayer*)[self parent];
@@ -99,13 +99,12 @@
 -(void)runPeepAction
 {
 	//レベルによってこの時間を調整すれば、出現頻度、出現時間が変わる
-	//waitingTime_ = CCRANDOM_0_1() + 1; //1～2秒間の待機時間を生成
-	//actionTime_ = CCRANDOM_0_1() + 1; //1～2秒間のアクションタイムを生成
-	waitingTime_ = 1;
-	actionTime_ = 1;
+	waitingTime_ = CCRANDOM_0_1()*3 + 0.5; //0.5～3.5秒間の待機時間を生成
+	actionTime_ = CCRANDOM_0_1()*1.5 + 0.5; //0.5～2秒間のアクションタイムを生成
 	
 	currentWait_ = 0;
-    NSLog(@"debug");
+    appearState_ = sStandBy;
+    
 	[self schedule:@selector(scheduleActionBegin:)];
 }
 
@@ -117,7 +116,15 @@
 	if(currentWait_ > waitingTime_)
 	{
 		onHit_ = NO;
-		[self startAction];
+        
+        GamePlayLayer *game = (GamePlayLayer*)[self parent];
+        
+        int appearCount = [game countActiveMoles];
+        
+        if(appearCount < game.MaxActiveNum)
+        {
+            [self startAction];
+        }
 		[self unschedule:_cmd];
 	}
 }
@@ -125,20 +132,20 @@
 
 -(void)startAction
 {
-	//ランダムで出現エフェクトを決定　int 0-3
-	//int effectType = (int)CCRANDOM_0_1() * 4 % 4;
-    //NSLog(@"type: %d", effectType);
-	int effectType = 0;
-	onAppear_ = YES;
+    srandom(time(NULL));
     
-    // float randY = CCRANDOM_0_1() * 20;
-    // float randUp = CCRANDOM_0_1() * 0.2 + 0.3;
-    // float randDown = CCRANDOM_0_1() * 0.2 + 0.3;
-	float randY = 10;
-    float randUp = 0.4;
-    float randDown = 0.3;
+	//ランダムで出現エフェクトを決定　int 0-3
+    float randnum = CCRANDOM_0_1()*3;
+	int effectType = (int)randnum % 3;
+    NSLog(@"type: %d", effectType);
+    
+	appearState_ = sAppear;
+    
+    float randY = CCRANDOM_0_1() * 20;
+    float randUp = CCRANDOM_0_1() * 0.2 + 0.3;
+    float randDown = CCRANDOM_0_1() * 0.2 + 0.3;
 	
-	float moveY = 40 + randY;
+	float moveY = 20 + randY;
 	float upTime = actionTime_ * randUp;
 	float downTime = actionTime_ * randDown;
 	float delayTime = actionTime_ - upTime - downTime;
@@ -161,22 +168,15 @@
 			
 		case 1:
             
-			easeUp = [CCEaseIn actionWithAction:up rate:5];
-			easeDown = [CCEaseIn actionWithAction:down rate:5];
+			easeUp = [CCEaseSineIn actionWithAction:up];
+			easeDown = [CCEaseSineIn actionWithAction:down];
 			
 			break;
 			
 		case 2:
             
-			easeUp = [CCEaseIn actionWithAction:up rate:5];
-			easeDown = [CCEaseIn actionWithAction:down rate:5];
-			
-			break;
-			
-		case 3:
-            
-			easeUp = [CCEaseIn actionWithAction:up rate:5];
-			easeDown = [CCEaseIn actionWithAction:down rate:5];
+			easeUp = [CCEaseExponentialIn actionWithAction:up];
+			easeDown = [CCEaseExponentialIn actionWithAction:down];
 			
 			break;
 			
@@ -188,7 +188,7 @@
 			break;
 	}
 	
-	CCCallBlock *block = [CCCallBlock actionWithBlock:^{ onAppear_ = NO; }];
+	CCCallBlock *block = [CCCallBlock actionWithBlock:^{ appearState_ = sHidden; }];
 	
 	CCSequence* seq = [CCSequence actions:easeUp, delay, easeDown, block, nil];
 	
@@ -205,12 +205,21 @@
 	//画像の変更
 	CCMoveTo *moveBack = [CCMoveTo actionWithDuration:0.5 position:originalPos_];
 	CCEaseOut *easeDown = [CCEaseOut actionWithAction:moveBack rate:5];
-	CCCallBlock *block = [CCCallBlock actionWithBlock:^{ onAppear_ = NO; }];
+	CCCallBlock *block = [CCCallBlock actionWithBlock:^{ appearState_ = sHidden; }];
 	
 	CCSequence *seq = [CCSequence actions:easeDown, block, nil];
     
     [self runAction:seq];
 }
 
+
+-(void)backToOriginAction
+{
+    appearState_ = sHidden;
+    
+    CCMoveTo *moveBack = [CCMoveTo actionWithDuration:0.3 position:originalPos_];
+    CCEaseOut *easeDown = [CCEaseOut actionWithAction:moveBack rate:5];
+    [self runAction:easeDown];
+}
 
 @end

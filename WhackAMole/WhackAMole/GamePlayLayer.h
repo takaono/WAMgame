@@ -11,7 +11,7 @@
 #import "ScoreScreenLayer.h"
 #import "MoleObject.h"
 
-#define TIME_LIMIT 10.0f
+#define TIME_LIMIT 20.0f
 
 typedef enum
 {
@@ -55,9 +55,11 @@ typedef enum
 }
 
 @property (nonatomic, readonly) int GameLevel;
+@property (nonatomic, readonly) int MaxActiveNum;
 
 +(CCScene *) scene;
 +(CCScene *) sceneWithLevel:(int)level;
 -(void)incrementScore;
+-(int)countActiveMoles;
 
 @end

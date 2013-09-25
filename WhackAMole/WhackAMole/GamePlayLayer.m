@@ -12,6 +12,7 @@
 @implementation GamePlayLayer
 
 @synthesize GameLevel = gameLevel_;
+@synthesize MaxActiveNum = maxActiveNum_;
 
 
 +(CCScene *) scene
@@ -133,23 +134,23 @@
         
         /*モグラオブジェクトの生成と設置*/
         moleSet_ = [[CCArray alloc] initWithCapacity:5];
-        MoleObject *mole0 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 4, size.height / 2 + 120)] autorelease];
+        MoleObject *mole0 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 4, size.height / 2 + 110)] autorelease];
         [self addChild:mole0 z:tMole0];
         [moleSet_ addObject:mole0];
 		
-		MoleObject *mole1 = [[[MoleObject alloc] initWithPosition:ccp(size.width * 3 / 4, size.height / 2 + 120)] autorelease];
+		MoleObject *mole1 = [[[MoleObject alloc] initWithPosition:ccp(size.width * 3 / 4, size.height / 2 + 110)] autorelease];
         [self addChild:mole1 z:tMole1];
         [moleSet_ addObject:mole1];
 		
-		MoleObject *mole2 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 2, size.height / 2 + 20)] autorelease];
+		MoleObject *mole2 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 2, size.height / 2 + 10)] autorelease];
         [self addChild:mole2 z:tMole2];
         [moleSet_ addObject:mole2];
 		
-		MoleObject *mole3 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 4, size.height / 2 - 80)] autorelease];
+		MoleObject *mole3 = [[[MoleObject alloc] initWithPosition:ccp(size.width / 4, size.height / 2 - 90)] autorelease];
         [self addChild:mole3 z:tMole3];
         [moleSet_ addObject:mole3];
 		
-		MoleObject *mole4 = [[[MoleObject alloc] initWithPosition:ccp(size.width * 3 / 4, size.height / 2 - 80)] autorelease];
+		MoleObject *mole4 = [[[MoleObject alloc] initWithPosition:ccp(size.width * 3 / 4, size.height / 2 - 90)] autorelease];
         [self addChild:mole4 z:tMole4];
         [moleSet_ addObject:mole4];
     }
@@ -292,6 +293,13 @@
         CCFadeIn *fadeIn = [CCFadeIn actionWithDuration:0.5];
         [endMenu runAction:fadeIn];
         
+        for(MoleObject *mole in moleSet_)
+        {
+            [mole stopAllActions];
+            [mole unscheduleAllSelectors];
+            [mole backToOriginAction];
+        }
+        
         [self unschedule:_cmd];
     }
     else
@@ -308,7 +316,9 @@
 //				[mole runPeepAction];
 //			}
 			
-			if(!mole.OnAppear)
+            //int numAppear = [self countActiveMoles];
+            //maxActiveNum_ = 2;
+			if(mole.AppearState == sHidden)
 			{
 				[mole runPeepAction];
 			}
@@ -336,7 +346,7 @@
 	
 	for(MoleObject* mole in moleSet_)
 	{
-		if(mole.OnAppear)
+		if(mole.AppearState == sAppear)
 		{
 			count++;
 		}
