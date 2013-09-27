@@ -10,10 +10,16 @@
 #import "cocos2d.h"
 #import "StartScreenLayer.h"
 
+//typedef enum
+//{
+//    tSuccessRate,
+//} ScoreTags;
+
 @interface ScoreScreenLayer : CCLayer {
     
 }
 
 +(CCScene *) scene;
+-(void)createSuccessRateLabel:(int)rate;
 
 @end

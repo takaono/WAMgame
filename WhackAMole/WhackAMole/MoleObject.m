@@ -27,7 +27,7 @@
         
         CCSprite *moleImg = [CCSprite spriteWithFile:@"sample01.png"];
         
-        [self addChild:moleImg];
+        [self addChild:moleImg z:0 tag:tMoleSprite];
         
         moleImg.position = ccp(self.contentSize.width/2, self.contentSize.height/2);
     }
@@ -81,11 +81,11 @@
 {
 	if(touch.tapCount > 0)
 	{
-        NSLog(@"Tap");
         //GamePlayLayer *game = (GamePlayLayer*)[self parent];
         //[game incrementScore];
 		if(appearState_ == sAppear && !onHit_)
 		{
+            NSLog(@"Hit");
 			onHit_ = YES;
 			GamePlayLayer *game = (GamePlayLayer*)[self parent];
 			[game incrementScore];
@@ -124,6 +124,7 @@
         if(appearCount < game.MaxActiveNum)
         {
             [self startAction];
+            [game incrementTotalCount];
         }
 		[self unschedule:_cmd];
 	}
@@ -203,11 +204,32 @@
 	[self stopActionByTag:tPeepAct];
 	
 	//画像の変更
+    CCSprite *moleImg = (CCSprite*)[self getChildByTag:tMoleSprite];
+    
+    CCAnimation* animObj = [CCAnimation animation];
+    
+    [animObj addSpriteFrameWithFilename:@"sample01.png"];
+    [animObj addSpriteFrameWithFilename:@"sample02.png"];
+    
+    animObj.loops = 1;
+    animObj.delayPerUnit = 0.1;
+    
+    /*アクションオブジェクトとしてアニメーションを登録*/
+    CCAnimate* animAction = [CCAnimate actionWithAnimation:animObj];
+    
+    [moleImg runAction:animAction];
+    
+    //隠れるアクション
+    CCDelayTime* delay = [CCDelayTime actionWithDuration:0.3];
+    
 	CCMoveTo *moveBack = [CCMoveTo actionWithDuration:0.5 position:originalPos_];
 	CCEaseOut *easeDown = [CCEaseOut actionWithAction:moveBack rate:5];
-	CCCallBlock *block = [CCCallBlock actionWithBlock:^{ appearState_ = sHidden; }];
+	CCCallBlock *block = [CCCallBlock actionWithBlock:^{
+        appearState_ = sHidden;
+        [moleImg setTexture:[[CCTextureCache sharedTextureCache] addImage: @"sample01.png"]];
+    }];
 	
-	CCSequence *seq = [CCSequence actions:easeDown, block, nil];
+	CCSequence *seq = [CCSequence actions:delay, easeDown, block, nil];
     
     [self runAction:seq];
 }

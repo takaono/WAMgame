@@ -30,6 +30,9 @@
 {
 	if( (self=[super init]) ) {
         
+        CCLayerColor *bgLayer = [CCLayerColor layerWithColor:ccc4(255, 255, 255, 255)];
+        [self addChild:bgLayer];
+        
 		CCLabelTTF *label = [CCLabelTTF labelWithString:@"Choose Level" fontName:@"Marker Felt" fontSize:20];
         
 		CGSize size = [[CCDirector sharedDirector] winSize];
@@ -40,23 +43,26 @@
 		
         __block id copy_self = self;
         
-		[CCMenuItemFont setFontSize:20];
+		//[CCMenuItemFont setFontSize:20];
 		
         
         /*レベルボタンの生成と設置*/
-		CCMenuItem *levelbutton1 = [CCMenuItemFont itemWithString:@"LEVEL 1" block:^(id sender){
+		//CCMenuItem *levelbutton1 = [CCMenuItemFont itemWithString:@"LEVEL 1" block:^(id sender){
+            //[copy_self gameStart:sender];
+        //}];
+        CCMenuItem *levelbutton1 = [CCMenuItemImage itemWithNormalImage:@"btn-level1.png" selectedImage:@"btn-level1-pressed.png" block:^(id sender){
             [copy_self gameStart:sender];
         }];
 		
 		levelbutton1.tag = level1;
         
-        CCMenuItem *levelbutton2 = [CCMenuItemFont itemWithString:@"LEVEL 2" block:^(id sender){
+        CCMenuItem *levelbutton2 = [CCMenuItemImage itemWithNormalImage:@"btn-level1.png" selectedImage:@"btn-level1-pressed.png" block:^(id sender){
             [copy_self gameStart:sender];
         }];
         
         levelbutton2.tag = level2;
         
-        CCMenuItem *levelbutton3 = [CCMenuItemFont itemWithString:@"LEVEL 3" block:^(id sender){
+        CCMenuItem *levelbutton3 = [CCMenuItemImage itemWithNormalImage:@"btn-level1.png" selectedImage:@"btn-level1-pressed.png" block:^(id sender){
             [copy_self gameStart:sender];
         }];
         
@@ -64,7 +70,7 @@
 		
 		CCMenu *menu = [CCMenu menuWithItems:levelbutton1, levelbutton2, levelbutton3, nil];
 		
-		[menu alignItemsVerticallyWithPadding:20];
+		[menu alignItemsVerticallyWithPadding:10];
 		[menu setPosition:ccp( size.width / 2, size.height / 2)];
 		
 		[self addChild:menu];

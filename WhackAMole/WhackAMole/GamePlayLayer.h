@@ -45,6 +45,7 @@ typedef enum
 {
     int gameLevel_;
     int score_;
+    int totalCount_;
     int maxActiveNum_;
     ccTime startTimer_;
     ccTime gameMainTimer_;
@@ -60,6 +61,7 @@ typedef enum
 +(CCScene *) scene;
 +(CCScene *) sceneWithLevel:(int)level;
 -(void)incrementScore;
+-(void)incrementTotalCount;
 -(int)countActiveMoles;
 
 @end

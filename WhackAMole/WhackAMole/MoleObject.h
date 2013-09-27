@@ -13,6 +13,7 @@
 typedef enum
 {
     tPeepAct,
+    tMoleSprite,
 } MoleObjTags;
 
 typedef enum

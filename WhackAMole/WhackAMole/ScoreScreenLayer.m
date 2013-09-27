@@ -27,13 +27,14 @@
 {
     if((self = [super init]))
     {
-        CCLabelTTF *label = [CCLabelTTF labelWithString:@"Score Screen Layer" fontName:@"Marker Felt" fontSize:20];
+        CCLabelTTF *label = [CCLabelTTF labelWithString:@"Score Rate" fontName:@"Marker Felt" fontSize:20];
         
 		CGSize size = [[CCDirector sharedDirector] winSize];
         
-		label.position =  ccp( size.width /2 , size.height/2 );
+		label.position = ccp( size.width /2 , size.height/2 + 30 );
         
 		[self addChild: label];
+        
         
         __block id copy_self = self;
         
@@ -67,6 +68,19 @@
 {
     NSLog(@"Game Restart Button Tap");
     [[CCDirector sharedDirector] replaceScene:[CCTransitionFade transitionWithDuration:0.5 scene:[StartScreenLayer scene] withColor:ccWHITE]];
+}
+
+
+-(void)createSuccessRateLabel:(int)rate
+{
+    CGSize size = [[CCDirector sharedDirector] winSize];
+    
+    CCLabelTTF *successRate = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d%%", rate] fontName:@"Marker Felt" fontSize:20];
+    
+    //successRate.tag = tSuccessRate;
+    successRate.position = ccp(size.width / 2, size.height / 2 );
+    
+    [self addChild:successRate];
 }
 
 @end

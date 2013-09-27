@@ -44,6 +44,7 @@
     if((self=[super init]))
     {
         score_ = 0;
+        totalCount_ = 0;
         
 		CGSize size = [[CCDirector sharedDirector] winSize];
         
@@ -210,7 +211,15 @@
 - (void)showGameResult:(id)sender
 {
     NSLog(@"Game End Button Tap");
-    [[CCDirector sharedDirector] replaceScene:[CCTransitionSlideInR transitionWithDuration:0.5 scene:[ScoreScreenLayer scene]]];
+    CCScene *scoreScreenScene = [ScoreScreenLayer scene];
+	ScoreScreenLayer *baseLayer = [scoreScreenScene.children objectAtIndex:0];
+    
+    float rate;
+    rate = (float)score_ / (float)totalCount_ * 100.0;
+    NSLog(@"rate: %f, score: %d, total: %d", rate, score_, totalCount_);
+    [baseLayer createSuccessRateLabel:(int)rate];
+	
+    [[CCDirector sharedDirector] replaceScene:[CCTransitionSlideInR transitionWithDuration:0.5 scene:scoreScreenScene]];
 }
 
 
@@ -337,6 +346,12 @@
 	CCLabelTTF *scoreLabel = (CCLabelTTF*)[self getChildByTag:tScoreLabel];
     
     [scoreLabel setString:sScore];
+}
+
+
+-(void)incrementTotalCount
+{
+    totalCount_++;
 }
 
 
