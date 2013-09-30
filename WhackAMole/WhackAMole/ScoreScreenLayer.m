@@ -27,7 +27,14 @@
 {
     if((self = [super init]))
     {
-        CCLabelTTF *label = [CCLabelTTF labelWithString:@"Score Rate" fontName:@"Marker Felt" fontSize:20];
+        CCLayerColor *background = [CCLayerColor layerWithColor:ccc4(255, 255, 255, 255)];
+        [self addChild:background];
+        
+        CCLabelTTF *label = [CCLabelTTF labelWithString:@"s c o r e   r a t e" fontName:@"Helvetica" fontSize:22];
+        
+        label.scale = 0.5;
+        
+        label.color = ccc3(20, 20, 20);
         
 		CGSize size = [[CCDirector sharedDirector] winSize];
         
@@ -42,14 +49,13 @@
 		
         
         /*スタート画面へ戻るボタンの生成と設置*/
-		CCMenuItem *restartLabel = [CCMenuItemFont itemWithString:@"Restart" block:^(id sender){
+		CCMenuItem *restartLabel = [CCMenuItemImage itemWithNormalImage:@"btn_restart.png" selectedImage:@"btn_restart_pressed.png" block:^(id sender){
             [copy_self showStartScreen:sender];
         }];
 		
 		CCMenu *menu = [CCMenu menuWithItems:restartLabel, nil];
-		
-		[menu alignItemsHorizontallyWithPadding:20];
-		[menu setPosition:ccp( size.width/2, size.height/2 - 50)];
+        
+		[menu setPosition:ccp( size.width/2, size.height/2 - 100)];
 		
 		[self addChild:menu];
     }
@@ -75,7 +81,9 @@
 {
     CGSize size = [[CCDirector sharedDirector] winSize];
     
-    CCLabelTTF *successRate = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d%%", rate] fontName:@"Marker Felt" fontSize:20];
+    CCLabelTTF *successRate = [CCLabelTTF labelWithString:[NSString stringWithFormat:@"%d%%", rate] fontName:@"Helvetica" fontSize:30];
+    successRate.scale = 0.5;
+    successRate.color = ccc3(20, 20, 20);
     
     //successRate.tag = tSuccessRate;
     successRate.position = ccp(size.width / 2, size.height / 2 );

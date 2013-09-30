@@ -25,7 +25,7 @@
         
         self.ignoreAnchorPointForPosition = NO;
         
-        CCSprite *moleImg = [CCSprite spriteWithFile:@"sample01.png"];
+        CCSprite *moleImg = [CCSprite spriteWithFile:@"mole_normal.png"];
         
         [self addChild:moleImg z:0 tag:tMoleSprite];
         
@@ -146,7 +146,8 @@
     float randUp = CCRANDOM_0_1() * 0.2 + 0.3;
     float randDown = CCRANDOM_0_1() * 0.2 + 0.3;
 	
-	float moveY = 20 + randY;
+	//float moveY = 20 + randY;
+    float moveY = 38;
 	float upTime = actionTime_ * randUp;
 	float downTime = actionTime_ * randDown;
 	float delayTime = actionTime_ - upTime - downTime;
@@ -208,8 +209,8 @@
     
     CCAnimation* animObj = [CCAnimation animation];
     
-    [animObj addSpriteFrameWithFilename:@"sample01.png"];
-    [animObj addSpriteFrameWithFilename:@"sample02.png"];
+    [animObj addSpriteFrameWithFilename:@"mole_normal.png"];
+    [animObj addSpriteFrameWithFilename:@"mole_normal_hit.png"];
     
     animObj.loops = 1;
     animObj.delayPerUnit = 0.1;
@@ -226,7 +227,7 @@
 	CCEaseOut *easeDown = [CCEaseOut actionWithAction:moveBack rate:5];
 	CCCallBlock *block = [CCCallBlock actionWithBlock:^{
         appearState_ = sHidden;
-        [moleImg setTexture:[[CCTextureCache sharedTextureCache] addImage: @"sample01.png"]];
+        [moleImg setTexture:[[CCTextureCache sharedTextureCache] addImage: @"mole_normal.png"]];
     }];
 	
 	CCSequence *seq = [CCSequence actions:delay, easeDown, block, nil];

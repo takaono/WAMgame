@@ -20,29 +20,25 @@ typedef enum
     tCountDown,
     tMainTimer,
     tScoreLabel,
+    tInfoLayer,
 } GamePlayTags;
 
 typedef enum
 {
-    tBg0 = 0,
-	tMole0,
-	tMole1,
-    tBg1,
-	tMole2,
-	tBg2,
-	tMole3,
-	tMole4,
-	tBg3,
-    tOrderGameEnd,
-    tOrderStartCount,
-    tOrderTime,
-    tOrderScore,
-    tOrderTap,
+    zBg0 = 0,
+	zMole0,
+    zBg1,
+	zMole1,
+	zBg2,
+    zMole2,
+	zBg3,
+    zInfoLayer,
 } SpriteOrderTags;
 
 
 @interface GamePlayLayer : CCLayer
 {
+    CGSize size;
     int gameLevel_;
     int score_;
     int totalCount_;
@@ -51,8 +47,6 @@ typedef enum
     ccTime gameMainTimer_;
     
     CCArray* moleSet_;
-    //CCLabelTTF *countDownLabel_;
-//    CCMenu *startMenu_;
 }
 
 @property (nonatomic, readonly) int GameLevel;
